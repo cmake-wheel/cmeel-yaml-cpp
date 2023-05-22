@@ -1,0 +1,71 @@
+name: Release on GitHub & PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CMEEL_LOG_LEVEL: DEBUG
+
+jobs:
+  linux:
+    name: "${{ matrix.image }} ${{ matrix.arch }}"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        image: ["manylinux_2_28", "musllinux_1_1"]
+        arch: ["x86_64", "aarch64"]
+        exclude:
+          - image: "musllinux_1_1"
+            arch: "aarch64"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Set up QEMU
+        if: matrix.arch == 'aarch64'
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+      - run: python -m pip install -U pip
+      - run: python -m pip install cmeel
+      - run: python -m cmeel docker -Ui "quay.io/pypa/${{ matrix.image }}_${{ matrix.arch }}"
+      - uses: actions/upload-artifact@v3
+        with:
+          path: wh
+
+  macos:
+    name: "macos"
+    runs-on: "macos-latest"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -U pip
+      - run: python -m pip wheel -vw wh .
+      - uses: actions/upload-artifact@v3
+        with:
+          path: wh
+
+  release:
+    needs: ["linux", "macos"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v3
+      - run: python -m pip install twine
+      - run: python -m twine upload -u __token__ -p "${{ secrets.PYPI_TOKEN }}" artifact/cmeel_yaml_cpp*.whl
+      - run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - run: gh release create -t "Release ${{ env.TAG}}" "${{ env.TAG }}" artifact/cmeel_yaml_cpp*.whl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
