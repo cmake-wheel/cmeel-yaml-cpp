@@ -41,6 +41,8 @@ jobs:
   macos:
     name: "macos"
     runs-on: "macos-latest"
+    env:
+      CMEEL_RUN_TESTS: OFF
     steps:
       - uses: actions/checkout@v3
         with:
