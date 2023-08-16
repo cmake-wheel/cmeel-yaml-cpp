@@ -16,7 +16,7 @@ repository = "https://github.com/cmake-wheel/cmeel-yaml-cpp.git"
 [tool.cmeel]
 build-number = 2
 configure-args = ["-DBUILD_SHARED_LIBS=ON"]
-py3-none = true
+has-sitelib = false
 source = "yaml-cpp"
 
 [tool.tomlsort]
