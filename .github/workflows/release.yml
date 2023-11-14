@@ -20,7 +20,7 @@ jobs:
           - image: "musllinux_1_1"
             arch: "aarch64"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
       - name: Set up QEMU
@@ -40,7 +40,7 @@ jobs:
     env:
       CMEEL_RUN_TESTS: OFF
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
       - uses: actions/setup-python@v4
@@ -56,7 +56,7 @@ jobs:
     needs: ["linux", "macos"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
       - run: pipx install twine
       - run: twine upload -u __token__ -p "${{ secrets.PYPI_TOKEN }}" artifact/cmeel_yaml_cpp*.whl
