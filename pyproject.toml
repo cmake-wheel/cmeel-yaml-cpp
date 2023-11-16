@@ -7,14 +7,13 @@ description = "yaml-cpp distribution for cmeel packages"
 license = "MIT"
 name = "cmeel-yaml-cpp"
 requires-python = ">= 3.8"
-version = "0.7.0"
+version = "0.8.0"
 
 [project.urls]
 homepage = "https://github.com/cmake-wheel/cmeel-yaml-cpp"
 repository = "https://github.com/cmake-wheel/cmeel-yaml-cpp.git"
 
 [tool.cmeel]
-build-number = 2
 configure-args = ["-DBUILD_SHARED_LIBS=ON"]
 has-sitelib = false
 source = "yaml-cpp"
