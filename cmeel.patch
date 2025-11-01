@@ -1,0 +1,9 @@
+--- yaml-cpp/CMakeLists.txt.orig	2025-11-01 16:35:18.132999039 +0100
++++ yaml-cpp/CMakeLists.txt	2025-11-01 16:35:29.828209961 +0100
+@@ -1,5 +1,5 @@
+ # 3.5 is actually available almost everywhere, but this a good minimum
+-cmake_minimum_required(VERSION 3.4)
++cmake_minimum_required(VERSION 3.10)
+
+ # enable MSVC_RUNTIME_LIBRARY target property
+ # see https://cmake.org/cmake/help/latest/policy/CMP0091.html
